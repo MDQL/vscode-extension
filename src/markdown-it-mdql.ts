@@ -1,7 +1,6 @@
 import { DataSource, MDQLCodeBlock, Query, QueryExecutor } from "@mdql/mdql";
 
 import * as MarkdownIt from "markdown-it";
-import Renderer = require("markdown-it/lib/renderer");
 import {
   isHideQueryActive,
   isInjectModeActive,
@@ -46,7 +45,13 @@ export function mdqlPlugin(md: MarkdownIt, db: DataSource) {
           const query = Query.parse(code);
           const executor = new QueryExecutor(db);
           const result = executor.execute(query);
-          renderedResult = `<pre>${result.toMarkdown()}</pre>`;
+          // Parse the content as Markdown and get the tokens
+          const markdownTokens = md.parse(result.toMarkdown(), {});
+
+          // Render the parsed Markdown tokens as HTML
+          const html = md.renderer.render(markdownTokens, options, env);
+
+          renderedResult = html;
         } catch (e) {
           renderedResult = `<pre>ERROR: ${e}</pre>`;
         }

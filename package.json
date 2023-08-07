@@ -20,6 +20,16 @@
   ],
   "main": "./out/main.js",
   "contributes": {
+    "configuration": {
+      "title": "Markdown Data Views",
+      "properties": {
+        "markdown-data-views.glob-pattern": {
+          "type": "string",
+          "default": "${workspaceFolder}/**/*.md",
+          "description": "Glob pattern for markdown files to index"
+        }
+      }
+    },
     "markdown.markdownItPlugins": true,
     "commands": [
       {

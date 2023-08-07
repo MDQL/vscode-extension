@@ -2,10 +2,15 @@
   "name": "markdown-data-views",
   "displayName": "Markdown Data Views",
   "description": "Data Views for Markdown",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2",
   "license": "GPL-3.0-only",
+  "publisher": "gorootde",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.81.0"
+  },
+  "repository": {
+    "url": "https://github.com/MDQL/vscode-extension"
   },
   "categories": [
     "Other"
@@ -13,7 +18,7 @@
   "activationEvents": [
     "onLanguage:markdown"
   ],
-  "main": "./out/extension.js",
+  "main": "./out/main.js",
   "contributes": {
     "markdown.markdownItPlugins": true,
     "commands": [
@@ -29,7 +34,11 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
+    "vscode:prepublish": "yarn esbuild-base --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "yarn esbuild-base --sourcemap",
+    "esbuild-watch": "yarn esbuild-base --sourcemap --watch",
+    "test-compile": "tsc -p ./",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "yarn run compile && yarn run lint",
@@ -45,6 +54,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "@vscode/test-electron": "^2.3.2",
+    "esbuild": "^0.18.18",
     "eslint": "^8.41.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",

@@ -18,7 +18,7 @@ This code block in any markdown document
     ```
 
 will render as
-![](2023-08-05-23-03-06.png)
+![](./images/2023-08-05-23-03-06.png)
 
 
 

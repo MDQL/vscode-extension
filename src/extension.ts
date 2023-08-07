@@ -7,9 +7,8 @@ import { isInjectModeActive, parseInfoString } from "./info-string-parser";
 import { InjectCommand } from "./command-inject";
 import { RefreshCommand } from "./command-refresh";
 import { createLogger, initLogger } from "./logging";
+import { Config } from "./config";
 
-const configSection = "markdown-data-views";
-const configKeyGlobPattern="glob-pattern"
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -17,12 +16,16 @@ export function activate(context: vscode.ExtensionContext) {
   initLogger(outputChannel);
 
   const log = createLogger("extension");
+  const config = new Config();
 
   outputChannel.show();
 
-  outputChannel.appendLine("Markdown Data-Views activated");
+  log.info("Markdown Data-Views activated");
 
-  const pattern = vscode.workspace.getConfiguration(configSection).get(configKeyGlobPattern) as string;
+  const workspacePath = vscode.workspace.workspaceFolders![0].uri.fsPath;
+  const globPattern = config.globPattern;
+  const pattern = `${workspacePath}/${globPattern}`;
+
   log.info(`Creating Document Repository with pattern ${pattern}`);
   const database = new DocumentRepository(pattern);
 
@@ -37,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
         const lenses = codeBlocks.flatMap((codeBlock) => {
           const start = document.positionAt(codeBlock.blockPos.startIndex);
           const end = document.positionAt(codeBlock.blockPos.endIndex);
-          outputChannel.appendLine(
+          log.info(
             `Lens create for ${start.line + 1}.${start.character} to ${
               end.line + 1
             }.${end.character}`
@@ -79,6 +82,11 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(codeLensProvider);
+
+  if (config.autoRefreshIndex) {
+    log.info("Auto-refreshing index");
+    vscode.commands.executeCommand(RefreshCommand.id);
+  }
 
   return {
     extendMarkdownIt(md: any) {

@@ -25,8 +25,18 @@
       "properties": {
         "markdown-data-views.glob-pattern": {
           "type": "string",
-          "default": "${workspaceFolder}/**/*.md",
+          "default": "**/*.md",
           "description": "Glob pattern for markdown files to index"
+        },
+        "markdown-data-views.auto-refresh-index": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable auto refresh of database index"
+        },
+        "markdown-data-views.log-level": {
+          "type": "string",
+          "default": "debug",
+          "description": "Log level for the extension"
         }
       }
     },

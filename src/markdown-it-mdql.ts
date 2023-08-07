@@ -7,6 +7,7 @@ import {
   isInjectModeActive,
   parseInfoString,
 } from "./info-string-parser";
+import { createLogger } from "./logging";
 
 export function createMarkdownItMdqlPlugin(db: DataSource) {
   return (md: MarkdownIt) => {
@@ -25,6 +26,7 @@ export function createMarkdownItMdqlPlugin(db: DataSource) {
 }
 
 export function mdqlPlugin(md: MarkdownIt, db: DataSource) {
+  const log = createLogger("mdqlPlugin");
   const original = md.renderer.rules.fence?.bind(md.renderer.rules);
   md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
     const token = tokens[idx];
@@ -39,12 +41,15 @@ export function mdqlPlugin(md: MarkdownIt, db: DataSource) {
         renderedQuery = `<pre>${code}</pre>`;
       }
 
-      if (isInjectModeActive(properties)) {
-      } else {
-        const query = Query.parse(code);
-        const executor = new QueryExecutor(db);
-        const result = executor.execute(query);
-        renderedResult = `<pre>${result.toMarkdown()}</pre>`;
+      if (!isInjectModeActive(properties)) {
+        try {
+          const query = Query.parse(code);
+          const executor = new QueryExecutor(db);
+          const result = executor.execute(query);
+          renderedResult = `<pre>${result.toMarkdown()}</pre>`;
+        } catch (e) {
+          renderedResult = `<pre>ERROR: ${e}</pre>`;
+        }
       }
       return `${renderedQuery}${renderedResult}`;
     } else {

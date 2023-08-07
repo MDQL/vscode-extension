@@ -6,23 +6,24 @@ import { mdqlPlugin } from "./markdown-it-mdql";
 import { isInjectModeActive, parseInfoString } from "./info-string-parser";
 import { InjectCommand } from "./command-inject";
 import { RefreshCommand } from "./command-refresh";
-import { initLogger } from "./logging";
+import { createLogger, initLogger } from "./logging";
 
+const configSection = "markdown-data-views";
+const configKeyGlobPattern="glob-pattern"
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   const outputChannel = vscode.window.createOutputChannel("Markdown DataViews");
   initLogger(outputChannel);
 
+  const log = createLogger("extension");
+
   outputChannel.show();
 
   outputChannel.appendLine("Markdown Data-Views activated");
 
-  const workspaceRoot = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-  const pattern = workspaceRoot! + "/**/*.md";
-  outputChannel.appendLine(
-    `Creating Document Repository with pattern ${pattern}`
-  );
+  const pattern = vscode.workspace.getConfiguration(configSection).get(configKeyGlobPattern) as string;
+  log.info(`Creating Document Repository with pattern ${pattern}`);
   const database = new DocumentRepository(pattern);
 
   context.subscriptions.push(new RefreshCommand(database).register());

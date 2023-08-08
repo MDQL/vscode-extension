@@ -1,13 +1,13 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { DocumentRepository, MDQLCodeBlock, QueryExecutor } from "@mdql/mdql";
+import { DocumentRepository, MDQLCodeBlock } from "@mdql/mdql";
 import * as vscode from "vscode";
-import { mdqlPlugin } from "./markdown-it-mdql";
-import { isInjectModeActive, parseInfoString } from "./info-string-parser";
 import { InjectCommand } from "./command-inject";
 import { RefreshCommand } from "./command-refresh";
-import { createLogger, initLogger } from "./logging";
 import { Config } from "./config";
+import { isInjectModeActive, parseInfoString } from "./info-string-parser";
+import { createLogger, initLogger } from "./logging";
+import { mdqlPlugin } from "./markdown-it-mdql";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
   const pattern = `${workspacePath}/${globPattern}`;
 
   log.info(`Creating Document Repository with pattern ${pattern}`);
-  const database = new DocumentRepository(pattern);
+  const database = new DocumentRepository(pattern, config.ignorePatterns);
 
   context.subscriptions.push(new RefreshCommand(database).register());
   context.subscriptions.push(new InjectCommand(database).register());

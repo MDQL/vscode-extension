@@ -7,6 +7,9 @@ export class Config {
     return vscode.workspace.getConfiguration(configSection).get(key) as T;
   }
 
+  get ignorePatterns(): string[] {
+    return this.get<string[]>("ignore-patterns");
+  }
   get globPattern(): string {
     return this.get<string>("glob-pattern");
   }

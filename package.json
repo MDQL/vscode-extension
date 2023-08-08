@@ -2,7 +2,7 @@
   "name": "markdown-data-views",
   "displayName": "Markdown Data Views",
   "description": "Data Views for Markdown",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "GPL-3.0-only",
   "publisher": "gorootde",
   "icon": "images/icon.png",
@@ -23,6 +23,14 @@
     "configuration": {
       "title": "Markdown Data Views",
       "properties": {
+        "markdown-data-views.ignore-pattern": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Glob patterns for files to ignore"
+        },
         "markdown-data-views.glob-pattern": {
           "type": "string",
           "default": "**/*.md",
@@ -81,7 +89,7 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "@mdql/mdql": "0.0.5-alpha.29",
+    "@mdql/mdql": "0.0.5-alpha.31",
     "markdown-it": "^13.0.1",
     "pino": "^8.15.0"
   }

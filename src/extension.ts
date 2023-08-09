@@ -86,6 +86,10 @@ export function activate(context: vscode.ExtensionContext) {
   if (config.autoRefreshIndex) {
     log.info("Auto-refreshing index");
     vscode.commands.executeCommand(RefreshCommand.id);
+    vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
+      log.info("Auto-refreshing index");
+      vscode.commands.executeCommand(RefreshCommand.id);
+    });
   }
 
   return {

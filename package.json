@@ -89,7 +89,7 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "@mdql/mdql": "0.0.5-alpha.33",
+    "@mdql/mdql": "0.0.6",
     "markdown-it": "^13.0.1",
     "pino": "^8.15.0"
   }

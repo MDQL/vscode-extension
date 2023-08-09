@@ -247,15 +247,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdql/mdql@npm:0.0.5-alpha.33":
-  version: 0.0.5-alpha.33
-  resolution: "@mdql/mdql@npm:0.0.5-alpha.33"
+"@mdql/mdql@npm:0.0.6":
+  version: 0.0.6
+  resolution: "@mdql/mdql@npm:0.0.6"
   dependencies:
     antlr4: ^4.13.0
     glob: ^10.3.3
     js-yaml: ^4.1.0
     pino: ^8.15.0
-  checksum: d37820521750bfd818cae3bc97facee880e0e6bacb4b1a84f3359b4ed19d000d12f9f406ef48ffd9cf7447f120c56d15bdecc8bf40f2cce23b1d8ea2a2aefbb1
+  checksum: f321f105ac34aba6a35e88e7d495a4ebdaee567bd041823b61715f82be88af20b0d1d8994df95db1ac2f1bef41954bae65f94ef3bcf73f4456faef024aba158b
   languageName: node
   linkType: hard
 
@@ -1939,7 +1939,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "markdown-data-views@workspace:."
   dependencies:
-    "@mdql/mdql": 0.0.5-alpha.33
+    "@mdql/mdql": 0.0.6
     "@types/glob": ^8.1.0
     "@types/markdown-it": ^12.2.3
     "@types/mocha": ^10.0.1

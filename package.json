@@ -2,7 +2,7 @@
   "name": "markdown-data-views",
   "displayName": "Markdown Data Views",
   "description": "Data Views for Markdown",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "GPL-3.0-only",
   "publisher": "gorootde",
   "icon": "images/icon.png",
@@ -89,7 +89,7 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "@mdql/mdql": "0.0.5-alpha.31",
+    "@mdql/mdql": "0.0.5-alpha.33",
     "markdown-it": "^13.0.1",
     "pino": "^8.15.0"
   }

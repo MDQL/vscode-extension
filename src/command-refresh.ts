@@ -20,6 +20,8 @@ export class RefreshCommand implements Command {
           this.db.tasks().length
         } tasks`
       );
+      this.log.debug(`Refreshing markdown preview`);
+      vscode.commands.executeCommand("markdown.preview.refresh");
     });
   }
 }

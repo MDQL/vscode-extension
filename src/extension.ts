@@ -8,6 +8,7 @@ import { Config } from "./config";
 import { isInjectModeActive, parseInfoString } from "./info-string-parser";
 import { createLogger, initLogger } from "./logging";
 import { mdqlPlugin } from "./markdown-it-mdql";
+const markdownLanguageId = "markdown";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -87,8 +88,10 @@ export function activate(context: vscode.ExtensionContext) {
     log.info("Auto-refreshing index");
     vscode.commands.executeCommand(RefreshCommand.id);
     vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
+      if (document.languageId === markdownLanguageId) {
       log.info("Auto-refreshing index");
       vscode.commands.executeCommand(RefreshCommand.id);
+      }
     });
   }
 

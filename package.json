@@ -2,7 +2,7 @@
   "name": "markdown-data-views",
   "displayName": "Markdown Data Views",
   "description": "Data Views for Markdown",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "GPL-3.0-only",
   "publisher": "gorootde",
   "icon": "images/icon.png",
@@ -13,13 +13,20 @@
     "url": "https://github.com/MDQL/vscode-extension"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Snippets"
   ],
   "activationEvents": [
     "onLanguage:markdown"
   ],
   "main": "./out/main.js",
   "contributes": {
+    "snippets": [
+      {
+        "language": "markdown",
+        "path": "./snippets.json"
+      }
+    ],
     "configuration": {
       "title": "Markdown Data Views",
       "properties": {

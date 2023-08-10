@@ -1,0 +1,10 @@
+{
+    "Insert MDQL Block": {
+        "prefix": "mdql",
+        "body": [
+            "```mdql",
+            "${1:TASKLIST} ${2:text} FROM ${0:tasks}",
+            "```"
+        ]
+    }
+}

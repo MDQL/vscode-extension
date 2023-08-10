@@ -1,13 +1,14 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { DocumentRepository, MDQLCodeBlock } from "@mdql/mdql";
+import { DocumentRepository } from "@mdql/mdql";
 import * as vscode from "vscode";
+import { registerCodeLens } from "./code-lenses";
 import { InjectCommand } from "./command-inject";
 import { RefreshCommand } from "./command-refresh";
 import { Config } from "./config";
-import { isInjectModeActive, parseInfoString } from "./info-string-parser";
 import { createLogger, initLogger } from "./logging";
 import { mdqlPlugin } from "./markdown-it-mdql";
+
 const markdownLanguageId = "markdown";
 
 // This method is called when your extension is activated
@@ -33,64 +34,15 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(new RefreshCommand(database).register());
   context.subscriptions.push(new InjectCommand(database).register());
 
-  const codeLensProvider = vscode.languages.registerCodeLensProvider(
-    { pattern: "**/*.md" }, // This pattern means the CodeLens will be provided for all file types
-    {
-      provideCodeLenses(document) {
-        const codeBlocks = MDQLCodeBlock.scan(document.getText());
-        const lenses = codeBlocks.flatMap((codeBlock) => {
-          const start = document.positionAt(codeBlock.blockPos.startIndex);
-          const end = document.positionAt(codeBlock.blockPos.endIndex);
-          log.info(
-            `Lens create for ${start.line + 1}.${start.character} to ${
-              end.line + 1
-            }.${end.character}`
-          );
-          const lenses: vscode.CodeLens[] = [];
-          const lensRange = new vscode.Range(start, end);
-
-          const mainLens = new vscode.CodeLens(lensRange);
-          mainLens.command = {
-            title: `MDQL Block`,
-            command: "",
-          };
-          lenses.push(mainLens);
-
-          const refreshLens = new vscode.CodeLens(lensRange);
-          refreshLens.command = {
-            title: `Refresh`,
-            command: RefreshCommand.id,
-          };
-          lenses.push(refreshLens);
-
-          const parsedInfo = parseInfoString(codeBlock.infoString);
-          if (isInjectModeActive(parsedInfo)) {
-            const refreshLens = new vscode.CodeLens(lensRange);
-            refreshLens.command = {
-              title: codeBlock.content ? "Reinject" : "Inject",
-              command: InjectCommand.id,
-              arguments: [codeBlock],
-            };
-            lenses.push(refreshLens);
-          }
-
-          return lenses;
-        });
-
-        return lenses;
-      },
-    }
-  );
-
-  context.subscriptions.push(codeLensProvider);
+  registerCodeLens(context);
 
   if (config.autoRefreshIndex) {
     log.info("Auto-refreshing index");
     vscode.commands.executeCommand(RefreshCommand.id);
     vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
       if (document.languageId === markdownLanguageId) {
-      log.info("Auto-refreshing index");
-      vscode.commands.executeCommand(RefreshCommand.id);
+        log.info("Auto-refreshing index");
+        vscode.commands.executeCommand(RefreshCommand.id);
       }
     });
   }

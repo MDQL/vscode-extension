@@ -2,6 +2,7 @@ import { DataSource, MDQLCodeBlock, QueryExecutor } from "@mdql/mdql";
 import { Command } from "./command";
 import * as vscode from "vscode";
 import { createLogger } from "./logging";
+import { mdqlRange2vscRange } from "./utils";
 
 export class InjectCommand implements Command {
   private log = createLogger(InjectCommand.name);
@@ -31,10 +32,7 @@ export class InjectCommand implements Command {
         const result = executor.execute(codeBlock.query);
         const resultString =
           (codeBlock.hasContent() ? "" : "\n") + result.toMarkdown();
-        const range = new vscode.Range(
-          editor.document.positionAt(codeBlock.contentPos.startIndex),
-          editor.document.positionAt(codeBlock.contentPos.endIndex)
-        );
+        const range = mdqlRange2vscRange(codeBlock.contentPos);
         this.log.debug(
           `Injecting into line ${range.start.line}.${range.start.character}-${range.end.line}.${range.end.character}`
         );

@@ -8,6 +8,7 @@ import { RefreshCommand } from "./command-refresh";
 import { Config } from "./config";
 import { createLogger, initLogger } from "./logging";
 import { mdqlPlugin } from "./markdown-it-mdql";
+import { createDiagnostics } from "./diagnostics";
 
 const markdownLanguageId = "markdown";
 
@@ -35,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(new InjectCommand(database).register());
 
   registerCodeLens(context);
+  createDiagnostics(context);
 
   if (config.autoRefreshIndex) {
     log.info("Auto-refreshing index");

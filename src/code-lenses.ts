@@ -4,23 +4,21 @@ import { createLogger } from "./logging";
 import { RefreshCommand } from "./command-refresh";
 import { isInjectModeActive, parseInfoString } from "./info-string-parser";
 import { InjectCommand } from "./command-inject";
+import { mdqlRange2vscRange } from "./utils";
 export function registerCodeLens(context: vscode.ExtensionContext) {
   const log = createLogger("CodeLens provider");
   const codeLensProvider = vscode.languages.registerCodeLensProvider(
-    { pattern: "**/*.md" }, // This pattern means the CodeLens will be provided for all file types
+    { pattern: "**/*.md", scheme: "file" },
     {
       provideCodeLenses(document) {
         const codeBlocks = MDQLCodeBlock.scan(document.getText());
         const lenses = codeBlocks.flatMap((codeBlock) => {
-          const start = document.positionAt(codeBlock.blockPos.startIndex);
-          const end = document.positionAt(codeBlock.blockPos.endIndex);
+          const lensRange = mdqlRange2vscRange(codeBlock.blockPos);
+
           log.info(
-            `Lens create for ${start.line + 1}.${start.character} to ${
-              end.line + 1
-            }.${end.character}`
+            `Lens create for ${codeBlock.blockPos.start}-${codeBlock.blockPos.end}`
           );
           const lenses: vscode.CodeLens[] = [];
-          const lensRange = new vscode.Range(start, end);
 
           const mainLens = new vscode.CodeLens(lensRange);
           mainLens.command = {

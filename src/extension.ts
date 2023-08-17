@@ -25,9 +25,22 @@ export function activate(context: vscode.ExtensionContext) {
 
   log.info("Markdown Data-Views activated");
 
-  const workspacePath = vscode.workspace.workspaceFolders![0].uri.fsPath;
   const globPattern = config.globPattern;
-  const pattern = `${workspacePath}/${globPattern}`;
+  let pattern: string;
+  const workspacePath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+  if (!workspacePath) {
+    log.info("No workspace detected. Will only index the current file.");
+    const openDocument = vscode.window.activeTextEditor?.document;
+    if (openDocument && openDocument.languageId === markdownLanguageId) {
+      pattern = `${openDocument.fileName}`;
+    } else {
+      log.info("Falling back to configured pattern.");
+      pattern = globPattern;
+    }
+  } else {
+    log.info("Indexing detected Workspace.");
+    pattern = `${workspacePath}/${globPattern}`;
+  }
 
   log.info(`Creating Document Repository with pattern ${pattern}`);
   const database = new DocumentRepository(pattern, config.ignorePatterns);
